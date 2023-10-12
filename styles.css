@@ -16,8 +16,8 @@
 
 .Contenedor_Formulario {
     position: relative;
-    width: 600px;
-    height: 600px;
+    min-width: 600px;
+    min-height: 600px;
     background: white;
     border: 4px solid black;
     border-radius: 15px;
@@ -40,7 +40,7 @@ h2 {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* margin-top: 20px; */
+    margin-top: 0%;
     font-size: 2em;
     color: black;
     background: white;
@@ -94,7 +94,7 @@ h2 {
 }
 
 .Contenedor_Tabla_View {
-    background: yellowgreen;
+    background: whitesmoke;
 }
 
 .Celda_Tabla_Form {
@@ -121,7 +121,7 @@ input[type="number"]::-webkit-outer-spin-button {
     border-radius: 8px;
     background: black;
     border: none;
-    outline: none;
+    /* outline: none; */
     cursor: pointer;
     font-size: 1.5em;
     font-family: 'Comic Neue', cursive;
@@ -129,6 +129,20 @@ input[type="number"]::-webkit-outer-spin-button {
     color: aliceblue;
 }
 
+/* MOSTRAR DATOS */
+.Tabla_View {
+    font-family: 'Comic Neue', cursive;
+    font-weight: bold;
+    font-size: .8em;
+    border: 3px solid black;
+}
+
+.Cuerpo_Tabla td{
+    border: 2px solid black;
+    text-align: center;
+}
+
+/* RESULTADOS */
 .Contenedor_Resultados {
     /* position: relative; */
     /* width: 600px;

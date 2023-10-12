@@ -29,31 +29,21 @@ function Capturar_Data_Prueba_Chi_Cuadrado() {
     const indiceEspacio = Cadena.indexOf(' ');
     let indice_cadena = 0;
     let subcadena = "";
-    //do{
     do{
         if (indiceEspacio != -1){
             subcadena = Cadena.substring(0, indiceEspacio);
             Cadena = Cadena.substring(indiceEspacio);
-
             if (Cadena[0] == " ") {
-                //subcadena = Cadena.substring(1);
                 Cadena = Cadena.substring(1);
             } else if (Cadena[1] == ""){
                 console.log(`[${subcadena}]`,typeof Cadena)
-               //Cadena = Cadena - subcadena;
-                //console.log(`[${Cadena}]`)
             }
-            //console.log(`[${subcadena}]`,typeof Cadena)
-            //console.log(`[${Cadena}]`)
         } else {
             //console.log(`[${Cadena}]`)
         }
         Array_Data.push(Number(subcadena)); 
         Cont++;
-        //console.log(Cadena,`Longitud: ${Cadena.length}`);
     }while(Cadena != "");
-
-    console.log(Array_Data);
     return Array_Data;
 }
 
@@ -356,8 +346,6 @@ function Mostrar_Resultados_Prueba_Chi_Cuadrado(){
     });
 
     
-
-    
     /* PASO 08: */
 
     Contenedor_FONDO.appendChild(Contenedor_Resultados);
@@ -379,19 +367,22 @@ function Mostrar_Tabla_Prueba_Chi_Cuadrado(Array_Labels,Oi,p,E,Error,m,SE,Estadi
         S_Error = S_Error + Error[i];
     }
 
-    Matrix_PCC.push(["Total",S_Oi,Math.ceil(S_p),Math.ceil(SE),Estadistico_Prueba.toFixed(4)]);
+    Matrix_PCC.push(["Total",S_Oi,Math.ceil(S_p),Math.ceil(SE),Estadistico_Prueba.toFixed(2)]);
     return Matrix_PCC;
 }
 
 function Cantidad_Intervalos(Array_Data) {
     let m = Math.round(Math.sqrt(Array_Data.length));
-    m=11;//Recuerda quitarlo antes de presentar ALERT!!!!!!!!!!!!!!!!!
+    //m=11;//Recuerda quitarlo antes de presentar ALERT!!!!!!!!!!!!!!!!!
     return m;
 }
 
 function Definir_Intervalos_Prueba_Chi_Cuadrado(opcion,Array_Data) {
     // DEFINIR LOS INTERVALOS
         let m = Math.round(Math.sqrt(Array_Data.length));
+        //let m = Math.sqrt(Array_Data.length);
+
+    // NUEVA FORMA
         //Hallar la amplitud de intervalo
         let Dato_Max = 0;
         let Dato_Min = 100;
@@ -403,28 +394,45 @@ function Definir_Intervalos_Prueba_Chi_Cuadrado(opcion,Array_Data) {
                 Dato_Min = Array_Data[i];
             }
         }
-        //console.log(`MAX: ${Dato_Max}, MIN: ${Dato_Min}`);
-        let h = Math.round((Dato_Max - Dato_Min) / m) ;
-        //console.log(`h: ${h}, m: ${m}`);
+        console.log(`MAX: ${Dato_Max}, MIN: ${Dato_Min}`);
+        //let h = Math.round((Dato_Max - Dato_Min) / m) ;
+        //let h = Math.ceil((Dato_Max - Dato_Min) / m) ;
+        let h = Number(((Dato_Max - Dato_Min) / m).toFixed(4));
+        console.log(`h: ${h}, m: ${m}`);
     // En el problemase busca del minimo al maximo
     let Array_Intervals = [];
-    let Interval_Max = 0, Interval_Min;
-    for (let i = 0 ; i <= m ; i++) {
+    let Array_Labels = []; // Etiquetas del Histograma
+    let Interval_Max = Number(Dato_Min.toFixed(2)), Interval_Min=0;
+    //let Interval_Max = Number(Dato_Min.toFixed(2)), Interval_Min=0;
+    //Interval_Max = Interval_Max + h;
+    Array_Intervals.push([Number((Interval_Min).toFixed(2)),Number((Interval_Max).toFixed(2))]);
+    Array_Labels.push([`0`,`${(Interval_Max).toFixed(2)}`]);
+    console.log(`${0} -> I Min: ${Interval_Min}, I Max: ${Interval_Max}`);
+    
+    for (let i = 1 ; i < m ; i++) {
         Interval_Min = Interval_Max;
         Interval_Max = Interval_Max + h;
-        //console.log(`I Min: ${Interval_Min}, I Max: ${Interval_Max}`);
+        console.log(`${i} -> I Min: ${Interval_Min.toFixed(2)}, I Max: ${Interval_Max.toFixed(2)}`);
+        if (i != m-1) {
+            Array_Intervals.push([Number((Interval_Min).toFixed(4)),Number((Interval_Max).toFixed(4))]);
+            Array_Labels.push([`${(Interval_Min).toFixed(2)}`,`${(Interval_Max).toFixed(2)}`]);
+        }
+        else {
+            Array_Intervals.push([Number((Interval_Min).toFixed(2)),Number((Interval_Max).toFixed(2))]);
+            Array_Labels.push([`${(Interval_Min).toFixed(2)}`,`∞`]);
+        }
     }
 
-    //console.log("NUEVA FORMA")
-    let Array_Labels = []; // Etiquetas del Histograma
-
+    // FORMA ACTUAL
+    console.log("ANTIGUA FORMA");
+/*
     Interval_Min = 0;
     Interval_Max = Dato_Min;
     console.log(`I Min: ${Interval_Min}, I Max: ${Interval_Max}`);
 
     Array_Intervals.push([Interval_Min,Interval_Max]);
     Array_Labels.push([`${Interval_Min}`,`${Interval_Max}`])
-    m = 11; //Recuerda quitarlo antes de presentar ALERT!!!!!!!!!!!!!!!!!
+    //m = 11; //Recuerda quitarlo antes de presentar ALERT!!!!!!!!!!!!!!!!!
     // Si son enteros se comienza del siguiente
     for (let i = 1 ; i < m  ; i++){
         Interval_Min = Interval_Max;
@@ -432,16 +440,15 @@ function Definir_Intervalos_Prueba_Chi_Cuadrado(opcion,Array_Data) {
         console.log(`I Min: ${Interval_Min}, I Max: ${Interval_Max}`);
         if (i != m-1) {
             Array_Intervals.push([Interval_Min,Interval_Max]);
-        Array_Labels.push([`${Interval_Min + 1}`,`${Interval_Max}`]);
+            Array_Labels.push([`${Interval_Min + 1}`,`${Interval_Max}`]);
         }
         else {
             Array_Intervals.push([Interval_Min,Interval_Max]);
             Array_Labels.push([`${Interval_Min}`,`∞`]);
         }
-    }
-    //console.log("AI:",Array_Intervals);
-    //console.log("AL:",Array_Labels);
-
+    }*/
+    console.log("AI:",Array_Intervals);
+    console.log("AL:",Array_Labels);
     if(opcion == 1) {
         return Array_Intervals;
     } else if (opcion == 2) {
@@ -453,7 +460,6 @@ function Calcular_Ocurrencias_Prueba_Chi_Cuadrado(Array_Intervals,Array_Data) {
     // CALCULAR LAS OCURRRENCIAS PARA CADA INTERVALO
     let Oi = [];
     let Cont_Oi = 0;
-
         for (let j = 0; j < Array_Intervals.length; j++) {
             for (let i = 0 ; i < Array_Data.length ; i++) {
                 //console.log(`ADi: ${Array_Data[i]}`,`AIj0: ${Array_Intervals[j][0]}`, `AIj1: ${Array_Intervals[j][1]}`);
@@ -473,13 +479,11 @@ function Calcular_Ocurrencias_Prueba_Chi_Cuadrado(Array_Intervals,Array_Data) {
                     }
                 }
                 //console.log(`Cont: ${Cont_Oi}`);
-
             }
             Oi[j] = Cont_Oi++;
             Cont_Oi = 0;
         }
     //console.log("Oi:",Oi);
-
     return Oi;
 }
 
@@ -530,6 +534,7 @@ function Crear_Histograma_Prueba_Chi_Cuadrado(Array_Labels,Oi,Contenedor_Histogr
 function Calcular_Probabilidad_Poisson(Array_Labels,m,Media_M) {
     // CALCULAR LA PROBABILIDAD DE CADA INTERVALO (DISTRIBUCIÓN DE POISSON)
     let H0, H1 , Lambda = Math.round(Media_M);
+    Lambda = 22; //EL LAMBDA VARIA 
     let p = []; 
     let Sp = 0;
     //console.log(Number.EPSILON, Math.E);
@@ -537,7 +542,7 @@ function Calcular_Probabilidad_Poisson(Array_Labels,m,Media_M) {
         if(i != m-1){
         for (let j=0; j < 2; j++){
             let aux = (Math.pow(Lambda,Number(Array_Labels[i][j]))*(Math.pow(Math.E,Lambda*(-1))))/Calcular_Factorial(Number(Array_Labels[i][j]));
-            //console.log(`(L^${Number(Array_Labels[i][j])}*e^${Lambda*(-1)})/${Calcular_Factorial(Number(Array_Labels[i][j]))}`)
+            console.log(`(L^${Number(Array_Labels[i][j])}*e^${Lambda*(-1)})/${Calcular_Factorial(Number(Array_Labels[i][j]))}`)
             Sp = Sp + aux;
         }
         } else {
@@ -546,7 +551,7 @@ function Calcular_Probabilidad_Poisson(Array_Labels,m,Media_M) {
             Sp = Sp +Sp2;
         }
         p[i] = Number(Sp.toFixed(4));
-        //console.log(Sp,p[i]);
+        console.log(Sp,p[i]);
         Sp = 0;
     }
 
@@ -563,7 +568,7 @@ function Crear_Frecuencia_Esperada_Prueba_Chi_Cuadrado(opcion,Array_Data,p,m) {
     let E = [];
     let SE = 0;
     for (let i = 0; i < m; i++) {
-        E[i] = Number((Array_Data.length * p[i]).toFixed(4));
+        E[i] = Number((Array_Data.length * p[i]).toFixed(2));
         SE = SE + E[i];
     }
     //console.log(`Ei:`,E,`SE: `, SE);
@@ -579,7 +584,7 @@ function Estimar_Estadistico_Prueba_Chicuadrado(opcion,E,m,Oi){
     let Error = [];
     let Estadistico_Prueba = 0;
     for (let i=0; i<m; i++) {
-        Error[i] = Number(((Math.pow(E[i]-Oi[i],2))/E[i]).toFixed(4));
+        Error[i] = Number(((Math.pow(E[i]-Oi[i],2))/E[i]).toFixed(2));
         //console.log(E[i],Oi[i]);
         Estadistico_Prueba = Estadistico_Prueba + Error[i];
     }
@@ -587,7 +592,7 @@ function Estimar_Estadistico_Prueba_Chicuadrado(opcion,E,m,Oi){
     if(opcion == 1) {
         return Error;
     } else if(opcion == 2) {
-        return Estadistico_Prueba;
+        return Number(Estadistico_Prueba.toFixed(2));
     }
 }
 
